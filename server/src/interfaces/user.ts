@@ -31,6 +31,8 @@ export type AuthData = {
     password: string
 }
 
+export type UserData = { user: Omit<User, 'password'> }
+
 export type ChangePassData = {
     password: string
     newPassword: string
@@ -62,7 +64,7 @@ export type UserActivateRequest = Request<{}, {}, ActivateData>
 export type UserChangePassRequest = UserRequestCookie<{}, {}, ChangePassData>
 
 export type UserAuthRequest = Request<{}, {}, AuthData>
-export type UserAuthResponse = Response<{}, AuthData & { user: Omit<User, 'password'> }>
+export type UserAuthResponse = Response<{}, AuthData & UserData>
 
 export type UserRegistrationRequest = Request<{}, {}, RegistrationData>
 
@@ -71,3 +73,5 @@ export type UserBlockRequest = Request<{}, {}, BlockData>
 export type UserRestrictRequest = Request<{}, {}, RestrictData>
 
 export type UsersGetRequest = Request<{}, {}, {}, GetManyData>
+
+export type UserAccessResponse = Response<{}, UserData>

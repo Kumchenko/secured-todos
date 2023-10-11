@@ -8,14 +8,48 @@ datasource db {
 }
 
 model User {
-    login      String  @id
-    role       Role    @default(User)
-    password   String  @default("")
-    count      Int     @default(3)
-    restricted Boolean @default(false)
+    login      String      @id
+    role       Role        @default(User)
+    password   String      @default("")
+    count      Int         @default(3)
+    restricted Boolean     @default(false)
+    posts      Post[]
+    regLogs    RegLog[]
+    actionLogs ActionLog[]
+}
+
+model RegLog {
+    id     Int       @id @default(autoincrement())
+    date   DateTime  @default(now())
+    user   User      @relation(fields: [login], references: [login])
+    login  String
+    action RegAction
+}
+
+model ActionLog {
+    id     Int      @id @default(autoincrement())
+    date   DateTime @default(now())
+    user   User     @relation(fields: [login], references: [login])
+    login  String
+    action String
+}
+
+model Post {
+    id      Int       @id @default(autoincrement())
+    user    User      @relation(fields: [login], references: [login])
+    login   String
+    text    String    @default("Empty post")
+    created DateTime  @default(now())
+    updated DateTime?
 }
 
 enum Role {
     User
+    Moderator
     Admin
+}
+
+enum RegAction {
+    Login
+    Logout
 }

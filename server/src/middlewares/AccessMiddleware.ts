@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from 'express'
 import ApiError from '../errors/ApiError'
 import { Jwt } from '../utils/Jwt'
 import { Role, User } from '@prisma/client'
-import { UserRequestCookie } from '../interfaces/user'
+import { UserData, UserRequestCookie } from '../interfaces/user'
+import Logger from '../utils/Logger'
 
 export const AccessMiddleware =
-    (roles?: Role[]) =>
-    (req: UserRequestCookie, res: Response<{}, { user: Omit<User, 'password'> }>, next: NextFunction) => {
+    (roles?: Role[]) => async (req: UserRequestCookie, res: Response<{}, UserData>, next: NextFunction) => {
         try {
             if (req.method === 'OPTIONS') {
                 next()
@@ -29,6 +29,9 @@ export const AccessMiddleware =
             // Setting User for response (for determining operation issuer)
             const { iat, ...user } = decoded
             res.locals.user = user
+
+            // Adding note to ActionLogs
+            Logger.logAction(user.login, req)
 
             // Success - Go to next middleware
             next()

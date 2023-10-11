@@ -11,11 +11,12 @@ import {
     UsersGetRequest,
 } from '../interfaces/user'
 import { prisma } from '../lib/prisma'
-import { Prisma, User } from '@prisma/client'
+import { Prisma, RegAction, User } from '@prisma/client'
 import ApiError from '../errors/ApiError'
 import { loginAttempts } from '../configs'
 import { Jwt } from '../utils/Jwt'
 import { passwordValidator } from '../utils/passwordValidator'
+import Logger from '../utils/Logger'
 
 class UserController {
     async identify(req: UserIdentifyRequest, res: UserAuthResponse, next: NextFunction) {
@@ -137,14 +138,17 @@ class UserController {
 
             res.cookie('token', Jwt.sign(user), { httpOnly: true })
             res.json(user)
+
+            Logger.logLogin(login)
         } catch (e) {
             next(e)
         }
     }
-    async logout(req: Request, res: Response, next: NextFunction) {
+    async logout(req: Request, res: UserAuthResponse, next: NextFunction) {
         try {
             res.cookie('token', '', { maxAge: 0 })
             res.sendStatus(200)
+            Logger.logLogout(res.locals.user.login)
         } catch (e) {
             next(e)
         }
