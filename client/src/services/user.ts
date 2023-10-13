@@ -8,7 +8,7 @@ import {
     User,
 } from '@/interfaces'
 import { axiosInstance } from '@/utils/axios'
-import api from '.'
+import api from './'
 
 const userApi = api.injectEndpoints({
     endpoints: build => ({

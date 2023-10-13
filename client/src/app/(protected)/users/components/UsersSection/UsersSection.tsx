@@ -3,6 +3,7 @@ import React from 'react'
 import UsersTable from '../UsersView/UsersTable'
 import { Role } from '@/interfaces'
 import { useGetUsersQuery } from '@/services/user'
+import { pollingInterval } from '@/constants'
 
 const UsersSection = () => {
     const { users, isLoading, isError } = useGetUsersQuery(undefined, {
@@ -10,6 +11,7 @@ const UsersSection = () => {
             users: data?.data,
             ...other,
         }),
+        pollingInterval,
     })
     return (
         <section className="flex flex-col gap-2">

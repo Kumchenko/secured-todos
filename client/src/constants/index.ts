@@ -6,6 +6,11 @@ export const modalTimeout = 2500 // 2.5s
 
 export const endpoints: Endpoint[] = [
     {
+        title: 'Пости',
+        href: '/posts',
+        roles: [Role.Admin, Role.Moderator, Role.User],
+    },
+    {
         title: 'Користувачі',
         href: '/users',
         roles: [Role.Admin],
@@ -13,12 +18,10 @@ export const endpoints: Endpoint[] = [
     {
         title: 'Налаштування',
         href: '/setup',
-        roles: [Role.Admin, Role.User],
     },
     {
         title: 'Довідка',
         href: '/',
-        roles: [Role.Admin, Role.User],
     },
     {
         title: 'Вихід',

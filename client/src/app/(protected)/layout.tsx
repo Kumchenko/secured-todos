@@ -9,7 +9,7 @@ import React from 'react'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     const cookieStore = cookies()
-    const token = cookieStore.get('token')
+    const token = cookieStore.get('refresh_token')
     const decoded = Jwt.verify<User>(token?.value)
     const headersList = headers()
 

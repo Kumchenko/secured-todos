@@ -41,7 +41,7 @@ const ChangePassForm = ({ className }: { className?: string }) => {
             <FormInput label="Старий пароль" type="password" name="password" id="password" placeholder="****" />
             <FormInput label="Новий пароль" type="password" name="newPassword" id="newPassword" />
             <FormInput label="Повторіть пароль" type="password" name="repeat" id="repeat" />
-            <button disabled={isSuccess} className="bg-emerald-400 p-1" type="submit">
+            <button className="bg-emerald-400 p-1" type="submit">
                 Змінити
             </button>
         </Form>

@@ -8,6 +8,7 @@ export type Endpoint = {
 
 export enum Role {
     User = 'User',
+    Moderator = 'Moderator',
     Admin = 'Admin',
 }
 
@@ -21,6 +22,19 @@ export type User = {
     role: Role
     count: number
     restricted: boolean
+}
+
+export type Post = {
+    id: number
+    login: string
+    text: string
+    created: string
+    updated?: string
+}
+
+export type PostUpdateArgs = {
+    id: number
+    text: string
 }
 
 export type LoginUserArgs = {

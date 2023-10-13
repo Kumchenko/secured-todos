@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import LoginSectionView from './LoginSectionView'
 import { activateUser, identifyUser, loginUser } from '@/services/user'
+import hashCode from '@/utils/hashCode'
+import { cryptPassword } from '@/utils/cryptPassword'
 
 const LoginSection = () => {
     const [isIdentified, setIsIdentified] = useState<IdentifyStatus | null>(null)
@@ -41,7 +43,8 @@ const LoginSection = () => {
                 try {
                     switch (isIdentified) {
                         case IdentifyStatus.Ok: {
-                            const user = await loginUser({ login, password })
+                            const hash = cryptPassword(login, password)
+                            const user = await loginUser({ login, password: hash })
                             router.push('/')
                             break
                         }

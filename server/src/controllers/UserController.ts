@@ -6,6 +6,7 @@ import {
     UserBlockRequest,
     UserChangePassRequest,
     UserIdentifyRequest,
+    UserRefreshRequest,
     UserRegistrationRequest,
     UserRestrictRequest,
     UsersGetRequest,
@@ -13,10 +14,12 @@ import {
 import { prisma } from '../lib/prisma'
 import { Prisma, RegAction, User } from '@prisma/client'
 import ApiError from '../errors/ApiError'
-import { loginAttempts } from '../configs'
+import { accessTokenCookieOptions, loginAttempts, refreshTokenCookieOptions } from '../configs'
 import { Jwt } from '../utils/Jwt'
 import { passwordValidator } from '../utils/passwordValidator'
 import Logger from '../utils/Logger'
+import hashCode from '../utils/hashCode'
+import { cryptPassword } from '../utils/cryptPassword'
 
 class UserController {
     async identify(req: UserIdentifyRequest, res: UserAuthResponse, next: NextFunction) {
@@ -66,7 +69,7 @@ class UserController {
         try {
             const { password, newPassword, repeat } = req.body
 
-            const decoded = Jwt.verify<User>(req.cookies.token)
+            const decoded = Jwt.verify<User>(req.cookies.access_token)
 
             if (!decoded) {
                 throw ApiError.notAuthorized()
@@ -117,7 +120,10 @@ class UserController {
                 throw ApiError.forbidden(lockedMessage)
             }
 
-            if (user.password !== password) {
+            // Getting hash by the formula
+            const hash = cryptPassword(user.login, user.password)
+
+            if (password !== hash) {
                 const count = --user.count
                 await prisma.user.update({ where: { login }, data: { count } })
                 throw ApiError.badRequest(
@@ -131,12 +137,38 @@ class UserController {
             next(e)
         }
     }
+    async refresh(req: UserRefreshRequest, res: UserAuthResponse, next: NextFunction) {
+        try {
+            const decodedUser = Jwt.verify<User>(req.cookies.refresh_token)
+            if (!decodedUser) {
+                throw ApiError.notAuthorized()
+            }
+
+            const user = await prisma.user.findUnique({
+                where: {
+                    login: decodedUser.login,
+                },
+            })
+
+            if (!user || user.count <= 0 || cryptPassword(user.login, user.password) !== decodedUser.password) {
+                throw ApiError.notAuthorized()
+            }
+
+            res.locals.user = user
+            next()
+        } catch (e) {
+            next(e)
+        }
+    }
     async authorize(req: Request, res: UserAuthResponse, next: NextFunction) {
         try {
             const { login } = res.locals.user
             const { password, ...user } = await prisma.user.update({ where: { login }, data: { count: loginAttempts } })
 
-            res.cookie('token', Jwt.sign(user), { httpOnly: true })
+            const token = Jwt.sign({ ...user, password: cryptPassword(user.login, password) })
+            res.cookie('access_token', token, accessTokenCookieOptions)
+            res.cookie('refresh_token', token, refreshTokenCookieOptions)
+
             res.json(user)
 
             Logger.logLogin(login)
@@ -146,7 +178,8 @@ class UserController {
     }
     async logout(req: Request, res: UserAuthResponse, next: NextFunction) {
         try {
-            res.cookie('token', '', { maxAge: 0 })
+            res.cookie('access_token', '', { maxAge: 0 })
+            res.cookie('refresh_token', '', { maxAge: 0 })
             res.sendStatus(200)
             Logger.logLogout(res.locals.user.login)
         } catch (e) {

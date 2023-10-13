@@ -1,10 +1,17 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { clearEmptyParams } from './clearEmptyParams'
-import { ApiError, AxiosBaseQuery, AxiosBaseQueryError } from '@/interfaces'
+import { AxiosBaseQuery, AxiosBaseQueryError } from '@/interfaces'
 import { BaseQueryFn } from '@reduxjs/toolkit/dist/query'
-import { openModal } from '@/services/modal'
-import store from '@/store'
-import { ModalType } from '@/constants'
+import { Mutex } from 'async-mutex'
+import { showErrorModal } from './showErrorModal'
+
+declare module 'axios' {
+    export interface AxiosRequestConfig {
+        retry?: boolean
+    }
+}
+
+const mutex = new Mutex()
 
 const axiosInstance = axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_API}/api`,
@@ -22,13 +29,47 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
     res => res,
-    (error: AxiosError<ApiError>) => {
-        store.dispatch(
-            openModal({
-                type: ModalType.Error,
-                description: error.response?.data.message,
-            }),
-        )
+    async (error: AxiosError<Error>) => {
+        const message = error.response?.data.message
+
+        // Catch 401 Error
+        if (error.response?.status === 401 && !error.config?.retry) {
+            // Saving initial request config
+            const config = error.config
+            if (!mutex.isLocked()) {
+                const release = await mutex.acquire()
+
+                // Try to refresh tokens
+                try {
+                    await axiosInstance('/user/refresh')
+                } catch (e) {
+                    return Promise.reject(e)
+                } finally {
+                    release()
+                }
+            } else {
+                // If locked when reauth - error, else - wait for unlock
+                if (config?.url === '/user/refresh') {
+                    showErrorModal(message)
+                    return Promise.reject(error)
+                } else {
+                    await mutex.waitForUnlock()
+                }
+            }
+
+            // Try to retry request
+            try {
+                // Retry request
+                if (config) {
+                    config.retry = true
+                    return await axiosInstance(config)
+                } else return Promise.reject(error)
+            } catch (e) {
+                showErrorModal(message)
+                return Promise.reject(e)
+            }
+        }
+        showErrorModal(message)
         return Promise.reject(error)
     },
 )

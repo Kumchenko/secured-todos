@@ -34,12 +34,14 @@ class Logger {
     }
     logAction = async (login: string, req: Request) => {
         Logger.trier(async () => {
-            await prisma.actionLog.create({
-                data: {
-                    login,
-                    action: getActionString(req),
-                },
-            })
+            if (!req.originalUrl.endsWith('/logout')) {
+                await prisma.actionLog.create({
+                    data: {
+                        login,
+                        action: getActionString(req),
+                    },
+                })
+            }
         })
     }
 }

@@ -53,7 +53,15 @@ export interface UserRequestCookie<
     Locals extends Record<string, any> = Record<string, any>,
 > extends Request<P, ResBody, ReqBody, ReqQuery, Locals> {
     cookies: {
-        token?: string
+        access_token?: string
+        refresh_token?: string
+    }
+}
+
+export interface UserRefreshRequest extends Request {
+    cookies: {
+        access_token?: string
+        refresh_token?: string
     }
 }
 

@@ -1,11 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux'
-import api from '@/services/'
 import ModalSlice from '@/services/modal'
+import api from '@/services'
 
 const reducer = combineReducers({
-    [api.reducerPath]: api.reducer,
     [ModalSlice.name]: ModalSlice.reducer,
+    [api.reducerPath]: api.reducer,
 })
 
 const store = configureStore({

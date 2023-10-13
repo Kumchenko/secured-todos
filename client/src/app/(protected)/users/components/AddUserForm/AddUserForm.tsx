@@ -14,7 +14,10 @@ const AddUserForm = ({ className }: { className?: string }) => {
     const [addUser] = useAddUserMutation()
     const formik = useFormik({
         initialValues,
-        onSubmit: ({ login }) => addUser(login),
+        onSubmit: ({ login }, action) => {
+            addUser(login)
+            action.resetForm()
+        },
     })
     return (
         <Form className={`flex flex-col w-80 gap-2 ${className}`} formik={formik}>

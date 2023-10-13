@@ -10,6 +10,7 @@ router.post('/login', UserController.authenticate, UserController.authorize)
 router.patch('/activate', UserController.activate, UserController.authorize)
 
 router.get('/me', AccessMiddleware(), UserController.getMe)
+router.get('/refresh', UserController.refresh, UserController.authorize)
 router.patch('/change', AccessMiddleware(), UserController.changePass, UserController.authorize)
 router.post('/registration', AccessMiddleware([Role.Admin]), UserController.registration)
 router.patch('/block', AccessMiddleware([Role.Admin]), UserController.block)

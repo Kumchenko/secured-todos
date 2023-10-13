@@ -15,7 +15,6 @@ export const passwordValidator = (password: string, repeat: string, extendedChec
             throw ApiError.badRequest('Пароль не містить латинські букви!')
         }
         if (!password.match(numPattern)) {
-            console.log(password)
             throw ApiError.badRequest('Пароль не містить цифр!')
         }
         if (!password.match(mathOpsPattern)) {

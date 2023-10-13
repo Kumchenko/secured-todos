@@ -4,12 +4,12 @@ import Link from 'next/link'
 import { memo } from 'react'
 import { usePathname } from 'next/navigation'
 import { LockClosedIcon } from '@heroicons/react/20/solid'
-import { useAppSelector } from '@/store'
 import { useGetUserQuery } from '@/services/user'
+import { pollingInterval } from '@/constants'
 
 const Header = ({ endpoints }: { endpoints?: Endpoint[] }) => {
     const path = usePathname()
-    const { data: user } = useGetUserQuery()
+    const { data: user } = useGetUserQuery(undefined, { pollingInterval })
 
     return (
         <header className="bg-cyan-800 p-4 flex justify-between items-center">
