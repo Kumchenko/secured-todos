@@ -19,6 +19,6 @@ router.patch('/restrict', AccessMiddleware([Role.Admin]), UserController.restric
 
 router.get('/all', AccessMiddleware([Role.Admin]), UserController.getMany)
 
-router.get('/logout', AccessMiddleware(), UserController.logout)
+router.get('/logout', UserController.logout)
 
 export default router

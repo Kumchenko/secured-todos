@@ -18,15 +18,18 @@ const ModalWrapper = () => {
 
     return (
         <div
-            onClick={e => dispatch(closeModal())}
-            className={`
-            ${show ? 'visible opacity-100' : 'pointer-events-none invisible opacity-0'}
-            absolute left-0 top-0 z-50 flex h-[100vh] w-[100vw] max-w-full flex-col items-center justify-center
-            gap-4 p-8 backdrop-blur-sm backdrop-brightness-90 transition-opacity md:items-end md:justify-end`}
+            className={`fixed top-0 left-0 w-[100vw] h-[100vh] z-50 ${
+                show ? 'visible opacity-100' : 'pointer-events-none invisible opacity-0'
+            }`}
         >
-            {modals.map(modal => (
-                <Modal key={modal.key} modal={modal} />
-            ))}
+            <div
+                onClick={e => dispatch(closeModal())}
+                className={`
+            flex h-full w-full max-w-full flex-col items-center max-md:justify-center overflow-y-auto
+            gap-4 p-8 backdrop-blur-sm backdrop-brightness-90 transition-opacity md:items-end md:flex-col-reverse`}
+            >
+                {modals.map(modal => <Modal key={modal.key} modal={modal} />).reverse()}
+            </div>
         </div>
     )
 }

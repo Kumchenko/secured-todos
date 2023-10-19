@@ -28,7 +28,7 @@ export const AccessMiddleware =
             })
 
             if (!user || user.count <= 0 || cryptPassword(user.login, user.password) !== decoded.password) {
-                throw ApiError.badRequest('t')
+                throw ApiError.badRequest('Авторизаційна інформація застаріла!')
             }
 
             // If there are some roles for performing Action and User role doesn't fit requirements

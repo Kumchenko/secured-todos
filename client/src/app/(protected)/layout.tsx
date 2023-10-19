@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer/Footer'
 import Header from '@/components/Header/Header'
+import LicenseCheck from '@/components/LicenseCheck/LicenseCheck'
 import { endpoints, securedPages } from '@/constants'
 import { Role, User } from '@/interfaces'
 import { Jwt } from '@/utils/Jwt'
@@ -29,6 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <>
             <Header endpoints={endpoints} />
             <main className="p-4">{children}</main>
+            <LicenseCheck />
             <Footer />
         </>
     )

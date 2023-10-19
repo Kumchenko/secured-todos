@@ -3,7 +3,7 @@ import { clearEmptyParams } from './clearEmptyParams'
 import { AxiosBaseQuery, AxiosBaseQueryError } from '@/interfaces'
 import { BaseQueryFn } from '@reduxjs/toolkit/dist/query'
 import { Mutex } from 'async-mutex'
-import { showErrorModal } from './showErrorModal'
+import { showErrorModal } from './showModal'
 
 declare module 'axios' {
     export interface AxiosRequestConfig {

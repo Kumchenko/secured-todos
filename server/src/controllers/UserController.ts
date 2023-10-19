@@ -176,12 +176,26 @@ class UserController {
             next(e)
         }
     }
-    async logout(req: Request, res: UserAuthResponse, next: NextFunction) {
+    async logout(req: UserRefreshRequest, res: Response, next: NextFunction) {
         try {
+            // Getting token from cookie
+            let token = req.cookies.refresh_token
+
+            // Log if user defined
+            const decoded = Jwt.verify<User>(token)
+            if (decoded) {
+                const user = await prisma.user.findUnique({
+                    where: { login: decoded.login },
+                })
+                if (user) {
+                    Logger.logLogout(user.login)
+                }
+            }
+
+            // Reset tokens
             res.cookie('access_token', '', { maxAge: 0 })
             res.cookie('refresh_token', '', { maxAge: 0 })
             res.sendStatus(200)
-            Logger.logLogout(res.locals.user.login)
         } catch (e) {
             next(e)
         }

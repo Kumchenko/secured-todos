@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import LoginSectionView from './LoginSectionView'
 import { activateUser, identifyUser, loginUser } from '@/services/user'
-import hashCode from '@/utils/hashCode'
 import { cryptPassword } from '@/utils/cryptPassword'
 
 const LoginSection = () => {

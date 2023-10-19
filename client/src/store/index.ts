@@ -11,9 +11,7 @@ const reducer = combineReducers({
 const store = configureStore({
     reducer,
     devTools: process.env.NODE_ENV !== 'production',
-    middleware(getDefaultMiddleware) {
-        return getDefaultMiddleware().concat(api.middleware)
-    },
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware),
 })
 
 export default store

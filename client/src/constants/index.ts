@@ -3,6 +3,7 @@ import { Endpoint, Role } from '@/interfaces'
 export const pollingInterval = 30000 // 30s
 export const logoutTimeout = 2700 // 2.7s
 export const modalTimeout = 2500 // 2.5s
+export const licenseInterval = 1000 * 60 * 5 // 5min
 
 export const endpoints: Endpoint[] = [
     {
@@ -22,6 +23,10 @@ export const endpoints: Endpoint[] = [
     {
         title: 'Довідка',
         href: '/',
+    },
+    {
+        title: 'Активація',
+        href: '/activate',
     },
     {
         title: 'Вихід',
