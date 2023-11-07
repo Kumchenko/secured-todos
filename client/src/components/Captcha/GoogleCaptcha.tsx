@@ -2,9 +2,9 @@ import ReCaptcha from 'react-google-recaptcha'
 import { siteKey } from '@/constants'
 import { useEffect, useRef } from 'react'
 
-type GoogleCaptchaProps = { isShown?: boolean | null; setResult: () => void; error?: string }
+type GoogleCaptchaProps = { isShown?: boolean | null; setResult: () => void; error?: string; touched?: boolean }
 
-const GoogleCaptcha = ({ isShown, setResult, error }: GoogleCaptchaProps) => {
+const GoogleCaptcha = ({ isShown, setResult, error, touched }: GoogleCaptchaProps) => {
     const captchaRef = useRef<ReCaptcha>(null)
 
     useEffect(() => {
@@ -16,7 +16,7 @@ const GoogleCaptcha = ({ isShown, setResult, error }: GoogleCaptchaProps) => {
 
     return (
         <>
-            {error && <span className="text-center text-red-500">{error}</span>}
+            {touched && error && <span className="text-center text-red-500">{error}</span>}
             <ReCaptcha ref={captchaRef} theme="dark" onChange={setResult} sitekey={siteKey} />
         </>
     )

@@ -24,6 +24,7 @@ const validationSchema = Yup.object({
     repeat: Yup.string()
         .required('Обовʼязково')
         .oneOf([Yup.ref('newPassword')], 'Паролі не співпадають'),
+    isCaptchaPassed: Yup.bool().isTrue('Капча не пройдена'),
 })
 
 const ChangePassForm = ({ className }: { className?: string }) => {
@@ -62,6 +63,7 @@ const ChangePassForm = ({ className }: { className?: string }) => {
                 className="self-center"
                 setTouched={onTouch}
                 setResult={onSubmit}
+                touched={formik.touched.isCaptchaPassed}
                 error={formik.errors.isCaptchaPassed}
             />
             <button className="bg-emerald-400 p-1" type="submit">

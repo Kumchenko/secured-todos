@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 
 const _captchaColors = ['blue', 'black', 'red']
 
@@ -49,4 +49,4 @@ const CaptchaView = ({
     )
 }
 
-export default CaptchaView
+export default memo(CaptchaView)

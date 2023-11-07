@@ -2,6 +2,8 @@
 import { memo, useState } from 'react'
 import CaptchaView from './CaptchaView'
 import { PaperAirplaneIcon, ArrowPathIcon } from '@heroicons/react/20/solid'
+import { useAppDispatch } from '@/store'
+import { showErrorModal } from '@/utils/showModal'
 
 const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*'
 
@@ -17,9 +19,10 @@ type CaptchaFormProps = {
     setResult: (isSuccess: boolean) => void
     setTouched: () => void
     error?: string
+    touched?: boolean
 }
 
-const CaptchaForm = ({ className, setResult, setTouched, error }: CaptchaFormProps) => {
+const CaptchaForm = ({ className, setResult, setTouched, error, touched }: CaptchaFormProps) => {
     const [value, setValue] = useState('')
     const [captcha, setCaptcha] = useState(generateCaptcha())
     const [disableField, setDisableField] = useState(false)
@@ -32,13 +35,13 @@ const CaptchaForm = ({ className, setResult, setTouched, error }: CaptchaFormPro
         setResult(value === captcha)
         setDisableField(value === captcha)
         if (value !== captcha) {
-            alert('Неправильно розгадана Капча!')
+            showErrorModal('Неправильно розгадана капча!')
             handleReset()
         }
     }
 
     return (
-        <div className={`flex flex-col ${className}`}>
+        <div className={`flex flex-col items-center ${className}`}>
             <label htmlFor="captcha">Капча</label>
             <div className={`flex flex-col`}>
                 <div className="flex">
@@ -68,7 +71,7 @@ const CaptchaForm = ({ className, setResult, setTouched, error }: CaptchaFormPro
                     onChange={e => setValue(e.currentTarget.value)}
                 />
             </div>
-            <span className="text-red-500">{error}</span>
+            {touched && error && <span className="text-red-500 text-center">{error}</span>}
         </div>
     )
 }

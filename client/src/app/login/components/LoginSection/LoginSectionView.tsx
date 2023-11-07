@@ -3,9 +3,7 @@ import FormInput from '@/components/Form/FormInput'
 import { IdentifyStatus } from '@/interfaces'
 import LoginButton from './LoginButton'
 import { FormikContextType } from 'formik'
-import ReCaptcha from 'react-google-recaptcha'
-import { siteKey } from '@/constants'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback } from 'react'
 import GoogleCaptcha from '@/components/Captcha/GoogleCaptcha'
 import { initialValues } from './LoginSection'
 
@@ -52,6 +50,7 @@ const LoginSectionView = ({
                     isShown={!!isIdentified}
                     setResult={handleCaptcha}
                     error={formik.errors.isCaptchaPassed}
+                    touched={formik.touched.isCaptchaPassed}
                 />
                 <LoginButton isError={isError} isIdentified={isIdentified} />
             </Form>
