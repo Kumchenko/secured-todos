@@ -1,4 +1,5 @@
 import LoginSection from './components/LoginSection/LoginSection'
+import CaptchaForm from '@/components/Captcha/CaptchaForm'
 
 const LoginPage = () => {
     return (

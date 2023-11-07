@@ -3,6 +3,11 @@ import FormInput from '@/components/Form/FormInput'
 import { IdentifyStatus } from '@/interfaces'
 import LoginButton from './LoginButton'
 import { FormikContextType } from 'formik'
+import ReCaptcha from 'react-google-recaptcha'
+import { siteKey } from '@/constants'
+import { useCallback, useEffect, useRef } from 'react'
+import GoogleCaptcha from '@/components/Captcha/GoogleCaptcha'
+import { initialValues } from './LoginSection'
 
 const LoginSectionView = ({
     isIdentified,
@@ -11,8 +16,12 @@ const LoginSectionView = ({
 }: {
     isIdentified: IdentifyStatus | null
     isError: boolean
-    formik: FormikContextType<any>
+    formik: FormikContextType<typeof initialValues>
 }) => {
+    const handleCaptcha = useCallback(() => {
+        formik.setFieldValue('isCaptchaPassed', true)
+    }, [formik])
+
     return (
         <section>
             <h2 className="text-2xl text-center font-bold mb-2">Введіть дані для входу</h2>
@@ -38,6 +47,11 @@ const LoginSectionView = ({
                     name="repeat"
                     label="Повторіть пароль"
                     id="repeat"
+                />
+                <GoogleCaptcha
+                    isShown={!!isIdentified}
+                    setResult={handleCaptcha}
+                    error={formik.errors.isCaptchaPassed}
                 />
                 <LoginButton isError={isError} isIdentified={isIdentified} />
             </Form>

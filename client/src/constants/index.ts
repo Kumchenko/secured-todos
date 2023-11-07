@@ -4,6 +4,8 @@ export const pollingInterval = 30000 // 30s
 export const logoutTimeout = 2700 // 2.7s
 export const modalTimeout = 2500 // 2.5s
 export const licenseInterval = 1000 * 60 * 5 // 5min
+export const activationKey = process.env.NEXT_PUBLIC_KEY
+export const siteKey = process.env.NEXT_PUBLIC_SITE_KEY || ''
 
 export const endpoints: Endpoint[] = [
     {

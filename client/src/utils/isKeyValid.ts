@@ -1,6 +1,8 @@
+import { activationKey } from '@/constants'
+
 const _alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-export const isKeyValid = (providedKey?: string | null, originalKey = process.env.NEXT_PUBLIC_KEY) => {
+export const isKeyValid = (providedKey?: string | null, originalKey = activationKey) => {
     if (!providedKey) return false
     for (let i = 0; i < _alphabet.length; i++) {
         const decrypted = providedKey

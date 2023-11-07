@@ -1,5 +1,5 @@
 import { IdentifyStatus } from '@/interfaces'
-import { MouseEventHandler, useMemo } from 'react'
+import { useMemo } from 'react'
 
 const LoginButton = ({ isIdentified, isError }: { isIdentified: IdentifyStatus | null; isError: boolean }) => {
     const buttonText = useMemo(() => {

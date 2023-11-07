@@ -70,7 +70,10 @@ export type AxiosBaseQuery = {
 
 export type AxiosBaseQueryError = {
     status: number
-    data: string
+    data: {
+        name: string
+        message: string
+    }
 }
 
 export type PaginationType = {

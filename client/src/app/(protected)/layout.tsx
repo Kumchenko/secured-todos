@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     securedPages.forEach(page => {
         if (headersList.get('x-url')?.endsWith(page.href)) {
             if (!page.roles.includes(decoded.role)) {
-                redirect('/')
+                redirect('/logout')
             }
         }
     })

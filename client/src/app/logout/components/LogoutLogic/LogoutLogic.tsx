@@ -10,13 +10,10 @@ const LogoutLogic = () => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
+        dispatch(api.util.resetApiState())
         logoutUser()
-            .catch(() => console.error('Error occured while logging out'))
-            .finally(() => {
-                dispatch(api.util.resetApiState())
-                router.push('/login')
-            })
-    }, [dispatch, router])
+        router.push('/login')
+    }, [])
     return null
 }
 

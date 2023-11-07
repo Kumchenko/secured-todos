@@ -7,8 +7,8 @@ import {
     RestrictUserArgs,
     User,
 } from '@/interfaces'
-import { axiosInstance } from '@/utils/axios'
 import api from './'
+import { axiosInstance } from '@/utils/axios'
 
 const userApi = api.injectEndpoints({
     endpoints: build => ({

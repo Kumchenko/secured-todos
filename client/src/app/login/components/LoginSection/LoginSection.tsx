@@ -5,8 +5,8 @@ import { ChangeUserPasswordArgs, IdentifyStatus, LoginUserArgs } from '@/interfa
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import LoginSectionView from './LoginSectionView'
-import { activateUser, identifyUser, loginUser } from '@/services/user'
 import { cryptPassword } from '@/utils/cryptPassword'
+import { loginUser, activateUser, identifyUser } from '@/services/user'
 
 const LoginSection = () => {
     const [isIdentified, setIsIdentified] = useState<IdentifyStatus | null>(null)
@@ -74,11 +74,12 @@ const LoginSection = () => {
     return <LoginSectionView isIdentified={isIdentified} isError={isError} formik={formik} />
 }
 
-const initialValues = {
+export const initialValues = {
     login: '',
     password: '',
     newPassword: '',
     repeat: '',
+    isCaptchaPassed: false,
 }
 
 const getValidationSchema = (isIdentified: IdentifyStatus | null) => {
@@ -89,6 +90,7 @@ const getValidationSchema = (isIdentified: IdentifyStatus | null) => {
         repeat: Yup.string()
             .required('Обовʼязково')
             .oneOf([Yup.ref('newPassword')], 'Паролі не співпадають'),
+        isCaptchaPassed: Yup.bool().isTrue('Капча не пройдена'),
     })
 
     switch (isIdentified) {
@@ -99,7 +101,7 @@ const getValidationSchema = (isIdentified: IdentifyStatus | null) => {
             return schema.omit(['password'])
         }
         case null: {
-            return schema.omit(['password', 'newPassword', 'repeat'])
+            return schema.omit(['password', 'newPassword', 'repeat', 'isCaptchaPassed'])
         }
         default: {
             const _exhaustiveCheck: never = isIdentified
